@@ -94,3 +94,6 @@ buildNumber.properties
 
 *.dat
 
+.classpath
+.project
+.settings/

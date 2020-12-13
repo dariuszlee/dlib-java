@@ -19,7 +19,7 @@
             
     <module>dlib</module>
             
-    <!--<module>models</module>-->
+    <module>models</module>
           
     <module>countr</module>
       
