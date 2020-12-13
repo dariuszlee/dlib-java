@@ -1,0 +1,144 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.radium226</groupId>
+        <artifactId>dlib-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <groupId>com.github.radium226</groupId>
+    <artifactId>dlib</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>DLib</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>8</java.version>
+        <download.cmake>false</download.cmake>
+    </properties>
+
+    <build>
+        <plugins>
+          <plugin>
+            <groupId>com.googlecode.cmake-maven-project</groupId>
+            <artifactId>cmake-maven-plugin</artifactId>
+            <version>3.7.2-b1</version>
+            <executions>
+              <execution>
+                <id>cmake-generate</id>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <generator>Unix Makefiles</generator>
+                  <sourcePath>${project.basedir}/src/main/native</sourcePath>
+                  <targetPath>${project.build.directory}/cmake</targetPath>
+                  <classifier>linux-x86_64</classifier>
+                  <options>
+                    <option>-DUSE_AVX_INSTRUCTIONS:BOOL=OFF</option>
+                    <option>-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON</option>
+                  </options>
+                </configuration>
+              </execution>
+              <execution>
+                <id>cmake-compile</id>
+                <goals>
+                  <goal>compile</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <config>Release</config>
+                  <projectDirectory>${project.build.directory}/cmake</projectDirectory>
+                  <classifier>linux-x86_64</classifier>
+                  </configuration>
+              </execution>
+            </executions>
+          </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/cmake/generated-sources</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/cmake/generated-resources</directory>
+                                    <includes>
+                                        <include>*.so</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!--
+            mvn install:install-file \
+                -Dfile="/usr/share/java/opencv4/opencv-420.jar" \
+                -DgroupId="opencv" \
+                -DartifactId="opencv" -Dversion="4.2.0" \
+                -Dpackaging="jar"
+        -->
+        <dependency>
+            <groupId>opencv</groupId>
+            <artifactId>opencv</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.radium226</groupId>
+            <artifactId>models</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.radium226</groupId>
+            <artifactId>resources</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+</project>

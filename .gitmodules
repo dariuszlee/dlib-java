@@ -1,0 +1,3 @@
+[submodule "dlib_src"]
+	path = dlib_src
+	url = git@github.com:davisking/dlib.git

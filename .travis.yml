@@ -1,0 +1,46 @@
+dist: xenial
+language: java
+addons:
+  apt:
+    packages:
+    - "cmake"
+    - "swig"
+    - "build-essential"
+    - "yasm"
+    - "git"
+    - "gfortran"
+    - "libjpeg8-dev"
+    - "libjasper-dev"
+    - "libpng12-dev"
+    - "libgtk2.0-dev"
+    - "pkg-config"
+    - "libavcodec-dev"
+    - "libavformat-dev"
+    - "libswscale-dev"
+    - "python-dev"
+    - "python-numpy"
+    - "libtbb2"
+    - "libtbb-dev"
+    - "libjpeg-dev"
+    - "libpng-dev"
+    - "libtiff-dev"
+    - "libdc1394-22-dev"
+    - "libblas-dev"
+    - "liblapack-dev"
+    - "libgflags-dev"
+    - "libatlas-base-dev"
+
+cache:
+  directories:
+  - "/tmp/dlib"
+  - "/tmp/opencv"
+
+before_install:
+- ./dlib-java make-opencv
+- ./dlib-java make-dlib
+
+script:
+- ./dlib-java mvn-package
+
+after_script:
+- ./dlib-java java-jar
